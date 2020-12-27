@@ -20,8 +20,7 @@ resource "aws_launch_configuration" "zekn" {
               #!/bin/bash
               sudo yum -y install httpd
               sudo chown -R -v ec2-user /var/www/html/
-              $id = (Invoke-WebRequest -Uri  http://169.254.169.254/latest/meta-data/instance-id).content
-              echo "Hello World ".$id > /var/www/html/index.html
+              echo "Hello World $(hostname -f) " > /var/www/html/index.html
               sudo systemctl start httpd
               EOF
   lifecycle {
@@ -59,7 +58,7 @@ resource "aws_autoscaling_group" "zekn" {
   load_balancers = ["${aws_elb.elb.name}"]
   health_check_type = "ELB"
   
-  min_size = 1
+  min_size = 2
   max_size = 2
 
   tag {

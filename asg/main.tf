@@ -2,27 +2,12 @@ provider "aws" {
   region="eu-central-1"
 }
 
-variable "server_port" {
-  type = number
-  default = 80
-  
-}
-
-variable "my_ip" {
-  default = "178.90.78.180/32"
-}
 
 resource "aws_launch_configuration" "zekn" {
-  image_id = "ami-03c3a7e4263fd998c"
+  image_id = "${var.ami}"
   instance_type = "t2.micro"
   security_groups = ["${aws_security_group.zekn.id}"]
-  user_data = <<-EOF
-              #!/bin/bash
-              sudo yum -y install httpd
-              sudo chown -R -v ec2-user /var/www/html/
-              echo "Hello World $(hostname -f) " > /var/www/html/index.html
-              sudo systemctl start httpd
-              EOF
+  user_data = "${file("user-data.sh")}"
   lifecycle {
     create_before_destroy = true
   }
@@ -110,6 +95,3 @@ resource "aws_security_group" "elb" {
   }
 }
 
-output "elb_dns_name" {
-  value = "${aws_elb.elb.dns_name}"
-}

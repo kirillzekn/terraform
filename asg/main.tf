@@ -4,10 +4,10 @@ provider "aws" {
 
 
 resource "aws_launch_configuration" "zekn" {
-  image_id = "${var.ami}"
+  image_id = var.ami
   instance_type = "t2.micro"
-  security_groups = ["${aws_security_group.zekn.id}"]
-  user_data = "${file("user-data.sh")}"
+  security_groups = [aws_security_group.zekn.id]
+  user_data = file("user-data.sh")
   lifecycle {
     create_before_destroy = true
   }
@@ -17,11 +17,11 @@ resource "aws_security_group" "zekn" {
   name = "terraform_www"
   
   ingress {
-    from_port = "${var.server_port}"
-    to_port = "${var.server_port}"
+    from_port = var.server_port
+    to_port = var.server_port
     protocol = "tcp"
-    //cidr_blocks = ["${var.my_ip}"]
-    security_groups = ["${aws_security_group.elb.id}"]
+    //cidr_blocks = [var.my_ip]
+    security_groups = [aws_security_group.alb.id]
   }
   egress {
     from_port=0
@@ -37,10 +37,10 @@ resource "aws_security_group" "zekn" {
 }
 
 resource "aws_autoscaling_group" "zekn" {
-  launch_configuration = "${aws_launch_configuration.zekn.id}"
-  availability_zones=["${data.aws_availability_zones.all.names[0]}"]
+  launch_configuration = aws_launch_configuration.zekn.id
+  vpc_zone_identifier = data.aws_subnet_ids.default.ids
   
-  load_balancers = ["${aws_elb.elb.name}"]
+  target_group_arns = [aws_lb_target_group.asg.arn]
   health_check_type = "ELB"
   
   min_size = 2
@@ -53,38 +53,82 @@ resource "aws_autoscaling_group" "zekn" {
   }
 }
 
-data "aws_availability_zones" "all" {
-  state="available"
+data "aws_vpc" "default" {
+  default = true
 }
 
-resource "aws_elb" "elb" {
-  name = "terraform-asg-zekn"
-  availability_zones = ["${data.aws_availability_zones.all.names[0]}"]
-  security_groups = ["${aws_security_group.elb.id}"]
+data "aws_subnet_ids" "default" {
+  vpc_id = data.aws_vpc.default.id
+}
 
-  listener {
-    lb_port = 80
-    lb_protocol = "http"
-    instance_port = "${var.server_port}"
-    instance_protocol = "http"
-  }
+
+resource "aws_lb" "alb" {
+  name = "terraform-asg-zekn"
+  load_balancer_type = "application"
+  subnets = data.aws_subnet_ids.default.ids
+  security_groups = [aws_security_group.alb.id]
+}
+
+resource "aws_lb_listener" "http" {
+	load_balancer_arn = aws_lb.alb.arn
+	port = 80
+	protocol = "HTTP"
+
+	default_action {
+		type = "fixed-response"
+	fixed_response {
+		content_type = "text/plain"
+		message_body = "404: page not found"
+		status_code = 404
+}
+}
+
+}
+
+
+
+resource  "aws_lb_listener_rule" "asg" {
+    listener_arn = aws_lb_listener.http.arn
+    priority = 100
+    condition {
+      path_pattern {
+       values = ["*"]  
+}
+}   
+    action {
+      type = "forward"
+      target_group_arn = aws_lb_target_group.asg.arn
+    }
+   }
+  
+
+
+resource "aws_lb_target_group" "asg" {
+  name = "terraform-asg-example"
+  port = var.server_port
+  protocol = "HTTP"
+  vpc_id = data.aws_vpc.default.id
 
   health_check {
+    path = "/"
+    protocol = "HTTP"
+    matcher = "200"
+    
     healthy_threshold = 2
     unhealthy_threshold = 2
     timeout = 3
     interval = 30
-    target = "HTTP:${var.server_port}/"
+    
   }
 }
 
-resource "aws_security_group" "elb" {
-  name = "terraform-zekn-elb"
+resource "aws_security_group" "alb" {
+  name = "terraform-zekn-alb"
   ingress {
-    from_port = "${var.server_port}"
-    to_port = "${var.server_port}"
+    from_port = var.server_port
+    to_port = var.server_port
     protocol = "tcp"
-    cidr_blocks = ["${var.my_ip}"]
+    cidr_blocks = [var.my_ip]
   }
   
   egress {

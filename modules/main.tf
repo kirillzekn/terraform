@@ -5,7 +5,7 @@ provider "aws" {
 
 module "web-cluster" {
 	#source 		= "./module/web-cluster"
-	source		= "github.com/kirillzekn/terraform//tree/main/modules/module/web-cluster?ref=v.0.0.1"	
+	source		= "github.com/kirillzekn/terraform//modules/module/web-cluster?ref=v.0.0.1"	
 
 	cluster_name 	= "webserver-stage"
 	

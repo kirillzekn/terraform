@@ -143,7 +143,7 @@ resource "aws_security_group" "alb" {
 
 
 resource "aws_db_instance" "rds" {
-	identifier_prefix = "terraform_RDS"
+	identifier_prefix = "terraform-rds"
 	engine = "mysql"
 	allocated_storage = 10
 	instance_class = "db.t2.micro"

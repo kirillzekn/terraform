@@ -4,8 +4,9 @@ provider "aws" {
 
 
 module "web-cluster" {
-	source 		= "./module/web-cluster"
-	
+	#source 		= "./module/web-cluster"
+	source		= "github.com/kirillzekn/terraform//tree/main/modules/module/web-cluster?ref=v.0.0.1"	
+
 	cluster_name 	= "webserver-stage"
 	
 	instance_type 	= "t2.micro"

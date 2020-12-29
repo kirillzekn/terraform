@@ -152,23 +152,3 @@ resource "aws_security_group_rule" "alb_allow_all_outbound" {
     	cidr_blocks 		= local.all_ips
   
 }
-
-
-
-
-#resource "aws_db_instance" "rds" {
-#
-#	identifier_prefix = "terraform-rds"
-#	engine = "mysql"
-#	allocated_storage = 10
-#	instance_class = "db.t2.micro"
-#	name = "test_db"
-#	username = "admin"
-#
-#	password = data.aws_secretsmanager_secret_version.db_password.secret_string
-#}
-#
-#data "aws_secretsmanager_secret_version" "db_password" {
-#	secret_id = "mysql-master-password"
-#}
-

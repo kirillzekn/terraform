@@ -4,7 +4,7 @@ provider "aws" {
 
 resource "aws_instance" "my_web_server" {
   ami = "ami-03c3a7e4263fd998c"
-  instance_type = "t2-micro"
+  instance_type = "t2.micro"
   vpc_security_group_ids = [aws_security_group.my_web_server.id]
   user_data = <<EOT
     #!/usr/bin/bash

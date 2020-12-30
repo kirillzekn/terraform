@@ -13,13 +13,21 @@ resource "aws_instance" "my_web_server" {
     echo "Hello World $(hostname -f) " > /var/www/html/index.html
     systemctl start httpd  
   EOT
-  
-  
+
+tags = {
+  "Name" = "terrafrom_web_server"
 }
+
+}
+
+
 
 resource "aws_security_group" "my_web_server" {
   name = "Terraform_Web_Server"
   description = "my web server group"
+  tags = {
+    "Name" = "Terraform_Security_Group"
+  }
 }
 
 resource "aws_security_group_rule" "my_web_server_inbound" {

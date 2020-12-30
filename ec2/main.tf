@@ -6,17 +6,10 @@ resource "aws_instance" "my_web_server" {
   ami = "ami-03c3a7e4263fd998c"
   instance_type = "t2.micro"
   vpc_security_group_ids = [aws_security_group.my_web_server.id]
-  user_data = <<EOT
-    #!/usr/bin/bash
-    yum install -y httpd
-    chown -R -v ec2-user /var/www/html/
-    echo "Hello World $(hostname -f) " > /var/www/html/index.html
-    systemctl start httpd  
-  EOT
-
-tags = {
+  user_data = file("user_data.sh")
+  tags = {
   "Name" = "terrafrom_web_server"
-}
+  }
 
 }
 

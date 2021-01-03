@@ -27,14 +27,9 @@ resource "aws_launch_template" "zekn" {
   tag_specifications {
     resource_type = "instance"
 
-  dynamic "tags" {
-for_each = var.custom_tags 
-content {
-key = tag.key
-value = tag.value 
-}
- }
-  }
+  tags = var.custom_tags
+
+   }
 
   lifecycle {
   create_before_destroy = true

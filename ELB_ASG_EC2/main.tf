@@ -58,7 +58,7 @@ resource "aws_launch_template" "zekn" {
 #ASG
 #############################################
 resource "aws_autoscaling_group" "zekn" {
-  name_prefix = "zekn-"
+  name_prefix = "ASG-${aws_launch_template.zekn.name}"
   availability_zones = [data.aws_availability_zones.available.names[0],data.aws_availability_zones.available.names[1]]
   desired_capacity   = 2
   max_size           = 2

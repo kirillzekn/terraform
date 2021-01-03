@@ -17,3 +17,11 @@ variable "asg_min_size" {
     description = "asg min size"
     default = 2
 }
+
+variable "custom_tags" {
+    type = map 
+    description = "list of custom tags"
+    default = {
+        Name = "TF Server"
+        Environment = "Prod" }
+}

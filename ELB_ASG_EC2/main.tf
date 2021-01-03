@@ -72,7 +72,7 @@ resource "aws_lb" "zekn" {
  }
 #############################################
 resource "aws_lb_target_group" "zekn" {
-  name     = "zekn_target_group"
+  name     = "zekn-target-group"
   port     = 80
   protocol = "HTTP"
   vpc_id = data.aws_vpc.default.id

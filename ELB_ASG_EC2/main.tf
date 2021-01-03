@@ -22,7 +22,12 @@ data "aws_availability_zones" "available" {
 data "aws_vpc" "default" {
   default = true
 }
+
+data "aws_subnet_ids" "default" {
+  vpc_id = data.aws_vpc.default.id
+}
 #/*
+
 
 #############################################
 #LAUNCH TEMPLATE FOR ASG
@@ -68,6 +73,7 @@ resource "aws_lb" "zekn" {
   name               = "zekn-ALB"
   internal           = false
   load_balancer_type = "application"
+  subnets = [ data.aws_subnet_ids.default.ids ]
   security_groups    = [aws_security_group.ELB.id]
  }
 #############################################

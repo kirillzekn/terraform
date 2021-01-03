@@ -19,7 +19,9 @@ data "aws_availability_zones" "available" {
     state = "available"
 }
 
-
+data "aws_vpc" "default" {
+  default = true
+}
 #/*
 
 #############################################
@@ -63,7 +65,7 @@ resource "aws_autoscaling_group" "zekn" {
 #ALB
 #############################################
 resource "aws_lb" "zekn" {
-  name               = "zekn_ALB"
+  name               = "zekn-ALB"
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.ELB.id]

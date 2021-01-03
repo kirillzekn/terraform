@@ -47,6 +47,10 @@ resource "aws_launch_template" "zekn" {
   user_data = base64encode(file("user_data.sh"))
 
   update_default_version = true
+
+  lifecycle {
+  create_before_destroy = true
+}
 }
 
 
@@ -66,6 +70,11 @@ resource "aws_autoscaling_group" "zekn" {
     id      = aws_launch_template.zekn.id
     version = "$Latest"
   }
+
+lifecycle {
+  create_before_destroy = true
+}
+
 }
 
 #############################################

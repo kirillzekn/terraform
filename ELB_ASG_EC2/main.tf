@@ -77,5 +77,5 @@ output "aws_az" {
 }
 
 output "security_group" {
-    value = "data.aws_security_group.default.id"
+    value = data.aws_security_group.default.id
 }

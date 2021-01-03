@@ -5,7 +5,7 @@ provider "aws" {
 #DATA
 
 data "aws_ami" "zekn" {
-    owners = [amazon]
+    owners = ["amazon"]
     most_recent = true
 
     filter {

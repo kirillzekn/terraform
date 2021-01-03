@@ -24,12 +24,16 @@ resource "aws_launch_template" "zekn" {
 
   update_default_version = true
 
+  tag_specifications {
+    resource_type = "instance"
+
   dynamic "tags" {
 for_each = var.custom_tags 
 content {
 key = tag.key
 value = tag.value 
 }
+ }
   }
 
   lifecycle {

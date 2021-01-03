@@ -73,7 +73,7 @@ resource "aws_lb" "zekn" {
   name               = "zekn-ALB"
   internal           = false
   load_balancer_type = "application"
-  subnets = [ data.aws_subnet_ids.default.ids ]
+  subnets = data.aws_subnet_ids.default.ids
   security_groups    = [aws_security_group.ELB.id]
  }
 #############################################

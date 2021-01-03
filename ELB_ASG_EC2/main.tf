@@ -45,6 +45,8 @@ resource "aws_launch_template" "zekn" {
   vpc_security_group_ids = [aws_security_group.EC2_to_ELB.id]
 
   user_data = base64encode(file("user_data.sh"))
+
+  update_default_version = true
 }
 
 

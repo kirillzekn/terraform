@@ -2,30 +2,6 @@ provider "aws" {
   region = "eu-central-1"
 }
 
-#############################################
-#DATA
-#############################################
-data "aws_ami" "zekn" {
-    owners = ["amazon"]
-    most_recent = true
-
-    filter {
-      name = "name"
-      values = ["amzn2-ami-hvm-*-x86_64-gp2"]
-    }
-}
-
-data "aws_availability_zones" "available" {
-    state = "available"
-}
-
-data "aws_vpc" "default" {
-  default = true
-}
-
-data "aws_subnet_ids" "default" {
-  vpc_id = data.aws_vpc.default.id
-}
 #/*
 
 
@@ -60,9 +36,9 @@ resource "aws_launch_template" "zekn" {
 resource "aws_autoscaling_group" "zekn" {
   name_prefix = "ASG-${aws_launch_template.zekn.name}"
   availability_zones = [data.aws_availability_zones.available.names[0],data.aws_availability_zones.available.names[1]]
-  desired_capacity   = 2
-  max_size           = 2
-  min_size           = 2
+  desired_capacity   = var.asg_desired_capacity
+  max_size           = var.asg_max_size
+  min_size           = var.asg_min_size
   health_check_type  = "ELB"
   target_group_arns =[aws_lb_target_group.zekn.arn]
 
@@ -170,13 +146,3 @@ resource "aws_security_group_rule" "ELB_EGRESS" {
 
 #*/
 
-#############################################
-#OUTPUT
-#############################################
-output "aws_ami_id" {
-    value = data.aws_ami.zekn.id
-}
-
-output "aws_az" {
-    value = data.aws_availability_zones.available.names
-}

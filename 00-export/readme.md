@@ -8,3 +8,11 @@ sudo mount -t fuse.vmhgfs-fuse -o allow_other .host:/share ~/share
 3. Debug
 export TF_LOG=TRACE or DEBUG or INFO or ERROR or WARN
 export TF_LOG_PATH=/path     
+
+4. Terraform commands
+  init
+  plan
+  apply
+  refresh - refresh tfstate file
+  validate  - validate syntax
+  fmt - format

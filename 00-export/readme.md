@@ -14,9 +14,10 @@ export TF_LOG_PATH=/path
   plan
   plan -out=path
   apply
-  apply filename 
+  apply filename
   refresh - refresh tfstate file
   validate  - validate syntax
   fmt - format
   taint
   graph
+  output NAME_OF_OUTPUT_COMMAND

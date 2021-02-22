@@ -12,7 +12,11 @@ export TF_LOG_PATH=/path
 4. Terraform commands
   init
   plan
+  plan -out=path
   apply
+  apply filename 
   refresh - refresh tfstate file
   validate  - validate syntax
   fmt - format
+  taint
+  graph

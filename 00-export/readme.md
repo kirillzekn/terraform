@@ -12,12 +12,21 @@ export TF_LOG_PATH=/path
 4. Terraform commands
   init
   plan
-  plan -out=path
+        -output=path
+        -target=XXX       not for used in prod
+        -refresh=false    not for used in prod
   apply
-  apply filename
+        filename
+        -auto-approve
   refresh - refresh tfstate file
   validate  - validate syntax
   fmt - format
   taint
   graph
   output NAME_OF_OUTPUT_COMMAND
+
+5. Functions
+  zipmap([a,b,c],[1,2,3])
+    a=1
+    b=2
+    c=3

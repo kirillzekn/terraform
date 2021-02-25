@@ -55,9 +55,9 @@ resource "aws_instance" "ec2_instance" {
   provisioner "remote-exec" {
     when = destroy
     inline = [
-
       "sudo yum -y remove httpd"
     ]
+    on_failure = continue
     connection {
       host        = self.public_ip
       type        = "ssh"
